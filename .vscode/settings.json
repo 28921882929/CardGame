@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "TestProject.sln"
+    "dotnet.defaultSolution": "CardGame.sln"
 }

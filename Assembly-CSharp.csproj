@@ -63,8 +63,9 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.57f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/EventTestDemo.cs" />
+    <Compile Include="Assets/Scripts/test/EventTestDemo.cs" />
     <Compile Include="Assets/Scripts/game/UIHandler/DragHandler.cs" />
+    <Compile Include="Assets/Scripts/test/EventTestReceiver.cs" />
     <Compile Include="Assets/Scripts/frameWork/Manager/ResourceManager.cs" />
     <Compile Include="Assets/Scripts/frameWork/UI/WindowInfo.cs" />
     <Compile Include="Assets/Scripts/frameWork/Manager/ObjectPoolManager.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="Assets/Scripts/frameWork/UI/Example/ExampleWindowData.cs" />
     <Compile Include="Assets/Scripts/frameWork/UI/WindowManager.cs" />
     <Compile Include="Assets/Scripts/game/UIHandler/IUIHandler.cs" />
-    <Compile Include="Assets/Scripts/EventTestReceiver.cs" />
     <Compile Include="Assets/Scripts/frameWork/UI/BaseWindow.cs" />
     <Compile Include="Assets/Scripts/frameWork/UI/Example/EventTestWindowData.cs" />
     <Compile Include="Assets/Scripts/frameWork/UI/Example/UIFrameworkExample.cs" />
@@ -90,7 +90,6 @@
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets/README_EVENT_TEST.txt" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader" />

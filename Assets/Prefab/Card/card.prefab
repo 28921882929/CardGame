@@ -202,10 +202,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a54b1e364f2402d86631ca5fd3e38a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverHeight: 30
+  hoverHeight: 50
   hoverScale: 1.2
   animationDuration: 0.2
-  hoverColor: {r: 1, g: 0, b: 0, a: 1}
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1784951
+      value: -0.03323116
+      inSlope: 0.7266928
+      outSlope: 0.7266928
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.84762466
+      value: 1.0630538
+      inSlope: 0.90336
+      outSlope: 0.90336
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   hoverEnabled: 1
 --- !u!114 &1236234296772709277
 MonoBehaviour:

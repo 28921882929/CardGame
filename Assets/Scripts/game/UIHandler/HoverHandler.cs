@@ -9,9 +9,9 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     // 视觉效果参数
     [SerializeField] private float hoverHeight = 30f;     // 悬停时上浮高度
-    [SerializeField] private float hoverScale = 1.2f;     // 悬停时放大比例
+    [SerializeField] private float hoverScale = 1.5f;     // 悬停时放大比例
     [SerializeField] private float animationDuration = 0.2f; // 动画持续时间
-    [SerializeField] private Color hoverColor = new Color(0.8f, 0.8f, 0.8f); // 悬停颜色
+    [SerializeField] private AnimationCurve animationCurve = null; // 动画曲线
     private Transform topLayer;
 
     // 悬停功能开关
@@ -20,29 +20,31 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 保存原始状态
     private Vector3 originalPosition;
     private Vector3 originalScale;
-    private Color originalColor;
+    private Quaternion originalRotation;           // 原始旋转角度
     private Transform originalParent;              // 原始父级对象
     private int originalSiblingIndex;              // 原始兄弟索引
-
-    // 组件引用
-    private Graphic graphic;
-
-    // 协程控制
     private Coroutine animationCoroutine;
 
     // 卡牌当前状态
     private enum CardState { Normal, HoverIn, HoverOut }
     private CardState currentState = CardState.Normal;
 
-    private void Awake()
-    {
-        // 获取组件
-        graphic = GetComponent<Graphic>();
-        if (graphic != null)
-        {
-            originalColor = graphic.color;
-        }
-    }
+    // private void Awake()
+    // {
+    //     // 如果没有设置动画曲线，创建一个带回弹效果的默认曲线
+    //     if (animationCurve == null || animationCurve.keys.Length == 0)
+    //     {
+    //         // 回弹效果曲线
+    //         animationCurve = new AnimationCurve(
+    //             new Keyframe(0, 0, 0, 2.5f),
+    //             new Keyframe(0.2f, 1.2f, 0, 0),
+    //             new Keyframe(0.4f, 0.9f, 0, 0),
+    //             new Keyframe(0.6f, 1.05f, 0, 0),
+    //             new Keyframe(0.8f, 0.98f, 0, 0),
+    //             new Keyframe(1, 1, 0, 0)
+    //         );
+    //     }
+    // }
 
     public void InitHandler()
     {
@@ -50,6 +52,7 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         topLayer = UILayerManager.Instance.GetLayer(UILayer.TopLayer);
         originalPosition = transform.position;
         originalScale = transform.localScale;
+        originalRotation = transform.rotation;     // 保存原始旋转
         originalParent = transform.parent;
         originalSiblingIndex = transform.GetSiblingIndex();
     }
@@ -138,32 +141,27 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             transform.SetParent(topLayer, true); // 保持世界坐标不变
         }
-        else
-        {
-            Debug.LogWarning("无法从UILayerManager获取顶层容器，将使用SetAsLastSibling作为备选方案");
-            transform.SetAsLastSibling();
-        }
 
         // 目标值
         Vector3 targetPosition = originalPosition + new Vector3(0, hoverHeight, 0);
         Vector3 targetScale = originalScale * hoverScale;
+        Quaternion targetRotation = Quaternion.identity; // 目标旋转为回正(0,0,0)
 
         // 动画过渡
         float elapsedTime = 0;
         Vector3 startPosition = transform.position;
         Vector3 startScale = transform.localScale;
-        Color startColor = graphic != null ? graphic.color : Color.white;
+        Quaternion startRotation = transform.rotation;
 
         while (elapsedTime < animationDuration)
         {
             float t = elapsedTime / animationDuration;
-            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
-            transform.localScale = Vector3.Lerp(startScale, targetScale, t);
+            float curvedT = animationCurve.Evaluate(t); // 使用动画曲线获取平滑的插值
 
-            if (graphic != null)
-            {
-                graphic.color = Color.Lerp(startColor, hoverColor, t);
-            }
+            // 应用回弹效果
+            transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, curvedT);
+            transform.localScale = Vector3.LerpUnclamped(startScale, targetScale, curvedT);
+            transform.rotation = Quaternion.LerpUnclamped(startRotation, targetRotation, curvedT);
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -172,11 +170,7 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // 确保最终状态
         transform.position = targetPosition;
         transform.localScale = targetScale;
-
-        if (graphic != null)
-        {
-            graphic.color = hoverColor;
-        }
+        transform.rotation = targetRotation;
 
         currentState = CardState.Normal;
         animationCoroutine = null;
@@ -186,23 +180,24 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         currentState = CardState.HoverOut;
 
+        SetParent(originalParent);
+
         // 当前状态
         Vector3 startPosition = transform.position;
         Vector3 startScale = transform.localScale;
-        Color startColor = graphic != null ? graphic.color : Color.white;
+        Quaternion startRotation = transform.rotation;
 
         // 动画过渡
         float elapsedTime = 0;
         while (elapsedTime < animationDuration)
         {
             float t = elapsedTime / animationDuration;
-            transform.position = Vector3.Lerp(startPosition, originalPosition, t);
-            transform.localScale = Vector3.Lerp(startScale, originalScale, t);
+            float curvedT = animationCurve.Evaluate(t); // 使用动画曲线获取平滑的插值
 
-            if (graphic != null)
-            {
-                graphic.color = Color.Lerp(startColor, originalColor, t);
-            }
+            // 应用回弹效果
+            transform.position = Vector3.LerpUnclamped(startPosition, originalPosition, curvedT);
+            transform.localScale = Vector3.LerpUnclamped(startScale, originalScale, curvedT);
+            transform.rotation = Quaternion.LerpUnclamped(startRotation, originalRotation, curvedT);
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -211,18 +206,25 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // 确保恢复到原始状态
         transform.position = originalPosition;
         transform.localScale = originalScale;
-
-        if (graphic != null)
-        {
-            graphic.color = originalColor;
-        }
-
-        // 恢复原始父级和索引
-        transform.SetParent(originalParent, true);
-        Debug.Log("set index: " + originalSiblingIndex + " to " + transform.name);
-        transform.SetSiblingIndex(originalSiblingIndex);
+        transform.rotation = originalRotation;
 
         currentState = CardState.Normal;
         animationCoroutine = null;
+    }
+
+    public void SetParent(Transform parent)
+    {
+        List<HoverHandler> hoverHandlers = new List<HoverHandler>();
+        transform.SetParent(parent, true);
+        int childCount = parent.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            HoverHandler hoverHandler = parent.GetChild(i).GetComponent<HoverHandler>();
+            if (hoverHandler != null)
+            {
+                hoverHandlers.Add(hoverHandler);
+            }
+        }
+        hoverHandlers.ForEach(handler => handler.transform.SetSiblingIndex(handler.originalSiblingIndex));
     }
 }

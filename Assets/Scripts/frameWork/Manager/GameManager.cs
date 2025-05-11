@@ -184,8 +184,6 @@ namespace Assets.Scripts.frameWork.Manager
                 var sceneManager = SceneManager.Instance;
                 var objectPoolManager = ObjectPoolManager.Instance;
                 var uiLayerManager = UILayerManager.Instance;
-                // 可以在这里添加更多管理器的初始化
-
                 // 注册游戏全局事件
                 RegisterGlobalEvents();
             }

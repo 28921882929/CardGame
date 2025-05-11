@@ -11,25 +11,25 @@ public enum UILayer
 
 public class UILayerManager : MonoBehaviour
 {
-    // 单例实例
-    private static UILayerManager _instance = null;
-    public static UILayerManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new GameObject("UILayerManager").AddComponent<UILayerManager>();
-                _instance.Init();
-            }
-            return _instance;
-        }
-    }
+    public static UILayerManager Instance = null;
     // 内部层级字典，用于快速查找
     private Dictionary<UILayer, Transform> uiLayers = new Dictionary<UILayer, Transform>();
 
     // Canvas引用
     [SerializeField] private Canvas mainCanvas;
+
+    // 可拖拽设置的UI层级
+    [Header("UI层级设置")]
+    [SerializeField] private Transform screenLayer;
+    [SerializeField] private Transform uiLayer;
+    [SerializeField] private Transform topLayer;
+    [SerializeField] private Transform effectLayer;
+
+    private void Awake()
+    {
+        UILayerManager.Instance = this;
+        Init();
+    }
 
     // 初始化方法，由GameManager调用
     public void Init()
@@ -51,37 +51,35 @@ public class UILayerManager : MonoBehaviour
             return;
         }
 
-        // 初始化并创建UI层级
-        CreateUILayers();
+        // 初始化UI层级
+        InitUILayers();
     }
 
-    // 创建所有UI层级
-    private void CreateUILayers()
+    // 初始化UI层级
+    private void InitUILayers()
     {
         uiLayers.Clear();
 
-        // 遍历所有UI层级枚举并创建对应的GameObject
-        foreach (UILayer layer in System.Enum.GetValues(typeof(UILayer)))
-        {
-            // 创建层级GameObject
-            GameObject layerObj = new GameObject(layer.ToString());
-            RectTransform rectTransform = layerObj.AddComponent<RectTransform>();
+        // 添加已经设置的层级到字典
+        if (screenLayer != null)
+            uiLayers[UILayer.ScreenLayer] = screenLayer;
+        else
+            Debug.LogWarning("未设置ScreenLayer");
 
-            // 设置为Canvas的子对象
-            rectTransform.SetParent(mainCanvas.transform, false);
+        if (uiLayer != null)
+            uiLayers[UILayer.UILayer] = uiLayer;
+        else
+            Debug.LogWarning("未设置UILayer");
 
-            // 设置RectTransform铺满父对象
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
+        if (topLayer != null)
+            uiLayers[UILayer.TopLayer] = topLayer;
+        else
+            Debug.LogWarning("未设置TopLayer");
 
-            // 设置层级顺序
-            rectTransform.SetSiblingIndex((int)layer);
-
-            // 添加到字典
-            uiLayers[layer] = rectTransform;
-        }
+        if (effectLayer != null)
+            uiLayers[UILayer.EffectLayer] = effectLayer;
+        else
+            Debug.LogWarning("未设置EffectLayer");
     }
 
     // 获取指定层级

@@ -29,23 +29,6 @@ public class HoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private enum CardState { Normal, HoverIn, HoverOut }
     private CardState currentState = CardState.Normal;
 
-    // private void Awake()
-    // {
-    //     // 如果没有设置动画曲线，创建一个带回弹效果的默认曲线
-    //     if (animationCurve == null || animationCurve.keys.Length == 0)
-    //     {
-    //         // 回弹效果曲线
-    //         animationCurve = new AnimationCurve(
-    //             new Keyframe(0, 0, 0, 2.5f),
-    //             new Keyframe(0.2f, 1.2f, 0, 0),
-    //             new Keyframe(0.4f, 0.9f, 0, 0),
-    //             new Keyframe(0.6f, 1.05f, 0, 0),
-    //             new Keyframe(0.8f, 0.98f, 0, 0),
-    //             new Keyframe(1, 1, 0, 0)
-    //         );
-    //     }
-    // }
-
     public void InitHandler()
     {
         Debug.Log("InitHandler");

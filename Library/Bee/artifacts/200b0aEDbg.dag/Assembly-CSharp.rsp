@@ -353,8 +353,6 @@
 -r:"Library/Bee/artifacts/200b0aEDbg.dag/UnityEngine.UI.ref.dll"
 -analyzer:"/Applications/Unity/Hub/Editor/2022.3.57f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"/Applications/Unity/Hub/Editor/2022.3.57f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
-"Assets/Scripts/EventTestDemo.cs"
-"Assets/Scripts/EventTestReceiver.cs"
 "Assets/Scripts/frameWork/Manager/EventManager.cs"
 "Assets/Scripts/frameWork/Manager/GameManager.cs"
 "Assets/Scripts/frameWork/Manager/ObjectPoolManager.cs"
@@ -376,6 +374,8 @@
 "Assets/Scripts/game/UIHandler/HoverHandler.cs"
 "Assets/Scripts/game/UIHandler/IUIHandler.cs"
 "Assets/Scripts/game/UIHandler/SlotHandler.cs"
+"Assets/Scripts/test/EventTestDemo.cs"
+"Assets/Scripts/test/EventTestReceiver.cs"
 -langversion:9.0
 /deterministic
 /optimize-

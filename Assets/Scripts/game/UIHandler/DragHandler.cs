@@ -108,8 +108,6 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             StartCoroutine(SmoothReturnToOrigin());
         }
 
-        hoveringSlot = null;
-
         // 启用CanvasGroup的交互
         if (canvasGroup != null)
         {
@@ -199,8 +197,6 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         // 更新当前插槽引用
         currentSlot = slot;
-
-        // 注意：不再设置anchoredPosition，因为SlotHandler会处理
     }
 
 }
